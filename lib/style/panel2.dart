@@ -262,10 +262,8 @@ class __FPanel2State extends State<_FPanel2> {
   // StreamSubscription? connectTypeListener;
   // ConnectivityResult? connectivityResult;
 
-  final Battery battery = Battery();
 
   StreamSubscription? batteryStateListener;
-  BatteryState? batteryState;
   int batteryLevel = 0;
   late Timer timer;
 
@@ -293,19 +291,7 @@ class __FPanel2State extends State<_FPanel2> {
     //   });
     // });
 
-    batteryStateListener =
-        battery.onBatteryStateChanged.listen((BatteryState state) {
-      if (batteryState == state) return;
-      setState(() {
-        batteryState = state;
-      });
-    });
 
-    getBatteryLevel();
-
-    Timer.periodic(const Duration(seconds: 5), (timer) {
-      getBatteryLevel();
-    });
 
     _valController = StreamController.broadcast();
 
@@ -392,14 +378,7 @@ class __FPanel2State extends State<_FPanel2> {
     player.removeListener(_playerValueChanged);
   }
 
-  getBatteryLevel() async {
-    final level = await battery.batteryLevel;
-    if (mounted) {
-      setState(() {
-        batteryLevel = level;
-      });
-    }
-  }
+
 
   double dura2double(Duration d) {
     return d.inMilliseconds.toDouble();
@@ -965,7 +944,6 @@ class __FPanel2State extends State<_FPanel2> {
                 buildTitle(),
                 const Spacer(),
                 buildTimeNow(),
-                buildPower(),
                 // buildNetConnect(),
                 buildSetting(context),
               ],
@@ -1519,73 +1497,7 @@ class __FPanel2State extends State<_FPanel2> {
     );
   }
 
-  // 电量显示
-  Widget buildPower() {
-    if (batteryState == BatteryState.charging) {
-      return Row(
-        children: [
-          Text(
-            '$batteryLevel%',
-            style: TextStyle(
-              color: Theme.of(context).primaryColor,
-              fontSize: 10,
-            ),
-          ),
-          Icon(
-            Icons.battery_charging_full_rounded,
-            color: Theme.of(context).primaryColor,
-          ),
-        ],
-      );
-    } else {
-      return Row(
-        children: [
-          Text(
-            '$batteryLevel%',
-            style: TextStyle(
-              color: Theme.of(context).primaryColor,
-              fontSize: 10,
-            ),
-          ),
-          if (batteryLevel < 14)
-            Icon(
-              Icons.battery_1_bar_rounded,
-              color: Theme.of(context).primaryColor,
-            )
-          else if (batteryLevel < 28)
-            Icon(
-              Icons.battery_2_bar_rounded,
-              color: Theme.of(context).primaryColor,
-            )
-          else if (batteryLevel < 42)
-            Icon(
-              Icons.battery_3_bar_rounded,
-              color: Theme.of(context).primaryColor,
-            )
-          else if (batteryLevel < 56)
-            Icon(
-              Icons.battery_4_bar_rounded,
-              color: Theme.of(context).primaryColor,
-            )
-          else if (batteryLevel < 70)
-            Icon(
-              Icons.battery_5_bar_rounded,
-              color: Theme.of(context).primaryColor,
-            )
-          else if (batteryLevel < 84)
-            Icon(
-              Icons.battery_6_bar_rounded,
-              color: Theme.of(context).primaryColor,
-            )
-          else
-            Icon(
-              Icons.battery_full_rounded,
-              color: Theme.of(context).primaryColor,
-            )
-        ],
-      );
-    }
-  }
+
 
   // 5G、WIFI、无网络
   // Widget buildNetConnect() {
