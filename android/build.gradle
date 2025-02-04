@@ -22,6 +22,7 @@ rootProject.allprojects {
 apply plugin: 'com.android.library'
 
 android {
+    namespace 'com.example.fplayer'  // 请根据实际包名调整
     compileSdkVersion 33
 
     compileOptions {
