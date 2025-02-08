@@ -13,6 +13,8 @@ class FPlayer extends ChangeNotifier implements ValueListenable<FValue> {
 
   FValue _value;
 
+  double? _volume;
+
   static Iterable<FPlayer> get all => _allInstance.values;
 
   /// Return the player unique id.
@@ -280,6 +282,7 @@ class FPlayer extends ChangeNotifier implements ValueListenable<FValue> {
         _dataSource = path;
         await _channel
             .invokeMethod("setDataSource", <String, dynamic>{'url': path});
+        if(_volume==0) setVolume(0);
       } on PlatformException catch (e) {
         return _errorListener(e);
       }
@@ -332,6 +335,7 @@ class FPlayer extends ChangeNotifier implements ValueListenable<FValue> {
     } else {
       await _nativeSetup.future;
       FLog.i("$this invoke setVolume $volume");
+      _volume = volume;
       return _channel
           .invokeMethod("setVolume", <String, dynamic>{"volume": volume});
     }
